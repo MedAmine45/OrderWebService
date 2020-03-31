@@ -1,0 +1,14 @@
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\bin\Debug\netcoreapp2.1\WebAPIPerspection.deps.json
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\bin\Debug\netcoreapp2.1\WebAPIPerspection.runtimeconfig.json
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\bin\Debug\netcoreapp2.1\WebAPIPerspection.runtimeconfig.dev.json
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\bin\Debug\netcoreapp2.1\WebAPIPerspection.dll
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\bin\Debug\netcoreapp2.1\WebAPIPerspection.pdb
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.csprojAssemblyReference.cache
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.RazorAssemblyInfo.cache
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.RazorAssemblyInfo.cs
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.AssemblyInfoInputs.cache
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.AssemblyInfo.cs
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.RazorTargetAssemblyInfo.cache
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.dll
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.pdb
