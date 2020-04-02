@@ -35,10 +35,10 @@ namespace WebAPIPerspection.Controllers
                                     Email = "Zinédine.Zidane@gmail.com" ,
                                      Sex ="M",
                                      Birth_date ="23/06/1972",
-                                     Address1 ="rue okba ben nafaa",
-                                     Address2 ="mornag 2090",
-                                     Zip="75001",
-                                     City="Marseille",
+                                     Address1 ="Émile et Armand Massard (Avenue)",
+                                     Address2 ="75017 Paris",
+                                     Zip="75017",
+                                     City="Paris",
                                      Country="FR",
                                      Mobile_phone ="87864521213",
                                      Height= 185,
@@ -55,7 +55,7 @@ namespace WebAPIPerspection.Controllers
             return Ok(personnes);
         }
         [HttpGet("{id}")]
-        public IActionResult GetPersonById(int id)
+        public IActionResult GetPersonById(long id)
         {
             var person = personnes.SingleOrDefault(x => x.PersonId == id);
             if (person == null)
@@ -77,7 +77,7 @@ namespace WebAPIPerspection.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletePerson(int id)
+        public IActionResult DeletePerson(long id)
         {
             var person = personnes.SingleOrDefault(x => x.PersonId == id);
             if (person == null)

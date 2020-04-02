@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace WebAPIPerspection.Models
 {
+    [Table("Person")]
     public class Person
     {
         [Key]
-        public int PersonId { get; set; }
+        public long PersonId { get; set; }
         [Required]
         public string Firstname { get; set; }
         [Required]

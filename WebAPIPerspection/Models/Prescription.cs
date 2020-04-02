@@ -12,7 +12,7 @@ namespace WebAPIPerspection.Models
     public class Prescription
     {
         [Key]
-        public int PrescriptionId { get; set; }
+        public long PrescriptionId { get; set; }
         [Required]
         public string State { get; set; }
         [Required]
@@ -21,7 +21,11 @@ namespace WebAPIPerspection.Models
         public decimal Price_shipping { get; set; }
         public Patient Patient { get; set; }
         public Prescriber Prescriber { get; set; }
-        public virtual List<string> Analyses { get; set; }
-        public virtual List<string> Tubes { get; set; }
+        [NotMapped]
+        public List<string> Analyses { get; set; }
+        public string Analyse { get; set; }
+        [NotMapped]
+        public  List<string> Tubes { get; set; }
+        public string Tube { get; set; }
     }
 }

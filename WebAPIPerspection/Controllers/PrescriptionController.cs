@@ -204,7 +204,7 @@ namespace WebAPIPerspection.Controllers
         // Get one kit_order by its id
         // GET: api/Prescription/5
         [HttpGet("{id}")]
-        public IActionResult GetPrescriptionById(int id)
+        public IActionResult GetPrescriptionById(long id)
         {
             var Prescription = prescriptions.SingleOrDefault(x => x.PrescriptionId == id);
             if (Prescription == null)
@@ -217,7 +217,7 @@ namespace WebAPIPerspection.Controllers
         //Query kit_orders with params
         //kit_order?prescription_id=1234
         [HttpGet("GetPrescriptionId")]
-        public IActionResult GetPrescription(int id)
+        public IActionResult GetPrescription(long id)
         {
             var Prescription = prescriptions.SingleOrDefault(x => x.PrescriptionId == id);
             if (Prescription == null)
@@ -254,7 +254,7 @@ namespace WebAPIPerspection.Controllers
         //kit_order/id (delete)
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult DeletePrescription(int id)
+        public IActionResult DeletePrescription(long id)
         {
             var prescription = prescriptions.SingleOrDefault(x => x.PrescriptionId == id);
             if (prescription == null)
@@ -272,7 +272,7 @@ namespace WebAPIPerspection.Controllers
         //kit_order/id (put)
         // PUT: api/Prescription/5
         [HttpPut("{id}")]
-        public IActionResult PutPrescription([FromRoute] int id, [FromBody] Prescription prescriptionInput)
+        public IActionResult PutPrescription(long id,Prescription prescriptionInput)
         {
             if (id != prescriptionInput.PrescriptionId)
             {
