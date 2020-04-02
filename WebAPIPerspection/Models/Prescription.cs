@@ -19,6 +19,10 @@ namespace WebAPIPerspection.Models
         public string BillingState { get; set; }
         public decimal Price_analyses { get; set; }
         public decimal Price_shipping { get; set; }
+        [ForeignKey("PatientPersonId")]
+        public long PatientPersonId { get; set; }
+        [ForeignKey("PrescriberPersonId")]
+        public long PrescriberPersonId { get; set; }
         public Patient Patient { get; set; }
         public Prescriber Prescriber { get; set; }
         [NotMapped]
