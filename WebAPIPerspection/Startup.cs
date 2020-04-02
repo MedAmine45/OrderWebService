@@ -29,6 +29,7 @@ namespace WebAPIPerspection
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<PrescriptionDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("connection")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+            services.AddDbContext<PrescriptionDbContext>(ServiceLifetime.Transient);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

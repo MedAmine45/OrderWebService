@@ -9,10 +9,6 @@ namespace WebAPIPerspection.Models
 {
     public class PrescriptionDbContext :DbContext
     {
-        public PrescriptionDbContext()
-        {
-
-        }
         public PrescriptionDbContext(DbContextOptions<PrescriptionDbContext> options) : base(options)
         {
         }

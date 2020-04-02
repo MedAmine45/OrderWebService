@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebAPIPerspection.Migrations
 {
-    public partial class Firstmigration : Migration
+    public partial class FirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,7 +46,9 @@ namespace WebAPIPerspection.Migrations
                     Price_analyses = table.Column<decimal>(nullable: false),
                     Price_shipping = table.Column<decimal>(nullable: false),
                     PatientPersonId = table.Column<long>(nullable: true),
-                    PrescriberPersonId = table.Column<long>(nullable: true)
+                    PrescriberPersonId = table.Column<long>(nullable: true),
+                    Analyse = table.Column<string>(nullable: true),
+                    Tube = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

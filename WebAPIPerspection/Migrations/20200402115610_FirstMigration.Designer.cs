@@ -10,8 +10,8 @@ using WebAPIPerspection.Models;
 namespace WebAPIPerspection.Migrations
 {
     [DbContext(typeof(PrescriptionDbContext))]
-    [Migration("20200401093512_TubeAndAnalyse")]
-    partial class TubeAndAnalyse
+    [Migration("20200402115610_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

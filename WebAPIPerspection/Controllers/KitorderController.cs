@@ -88,6 +88,9 @@ namespace WebAPIPerspection.Controllers
                 return BadRequest();
             }
 
+            _context.Entry(prescription.Patient).State = EntityState.Detached;
+            _context.Entry(prescription.Prescriber).State = EntityState.Detached;
+
             _context.Entry(prescription).State = EntityState.Modified;
 
             try
@@ -120,12 +123,13 @@ namespace WebAPIPerspection.Controllers
             }
 
 
-            Patient patient = SavePatient(prescription);
-            Prescriber prescribe = SavePrescriber(prescription);
+            Patient patient =await  SavePatient(prescription);
+            Prescriber prescribe = await SavePrescriber(prescription);
 
             _context.Prescriptions.Add(prescription);
-                await _context.SaveChangesAsync();
-                return CreatedAtAction("GetPrescription", new { id = prescription.PrescriptionId }, prescription);
+            //_context.SaveChanges();
+            await _context.SaveChangesAsync();
+             return CreatedAtAction("GetPrescription", new { id = prescription.PrescriptionId }, prescription);
           
          
         }
@@ -182,10 +186,10 @@ namespace WebAPIPerspection.Controllers
         }
 
 
-        private Patient SavePatient(Prescription prescription)
+        private async Task<Patient> SavePatient(Prescription prescription)
         {
             Patient patientInput = prescription.Patient;
-            Patient existPatient = _context.Patients.Where(p => (p.Firstname == patientInput.Firstname && p.Lastname == patientInput.Lastname && p.Birth_date == patientInput.Birth_date) || p.Email == patientInput.Email || p.Mobile_phone == patientInput.Mobile_phone).ToList().FirstOrDefault() ;
+            Patient existPatient =  _context.Patients.Where(p => (p.Firstname == patientInput.Firstname && p.Lastname == patientInput.Lastname && p.Birth_date == patientInput.Birth_date) || p.Email == patientInput.Email || p.Mobile_phone == patientInput.Mobile_phone).ToList().FirstOrDefault() ;
     
             if (existPatient!=null)
             {
@@ -198,7 +202,7 @@ namespace WebAPIPerspection.Controllers
                 try
                 {
                     _context.Entry(existPatient).State = EntityState.Modified;
-                    _context.SaveChangesAsync();
+                   await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -215,7 +219,7 @@ namespace WebAPIPerspection.Controllers
                 try
                 {
                      newPatient= _context.Patients.Add(patientInput).Entity;
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -227,7 +231,7 @@ namespace WebAPIPerspection.Controllers
             }
           
         }
-        private Prescriber SavePrescriber(Prescription prescription)
+        private async Task<Prescriber> SavePrescriber(Prescription prescription)
         {
             Prescriber prescriberInput = prescription.Prescriber;
             Prescriber existPrescriber = _context.Prescribers.Where(p => (p.Firstname == prescriberInput.Firstname && p.Lastname == prescriberInput.Lastname && p.Birth_date == prescriberInput.Birth_date) || p.Email == prescriberInput.Email || p.Mobile_phone == prescriberInput.Mobile_phone).ToList().FirstOrDefault();
@@ -240,7 +244,7 @@ namespace WebAPIPerspection.Controllers
                 try
                 {
                     _context.Entry(existPrescriber).State = EntityState.Modified;
-                    _context.SaveChangesAsync();
+                    await  _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -257,7 +261,7 @@ namespace WebAPIPerspection.Controllers
                 try
                 {
                     newPrescriber = _context.Prescribers.Add(prescriberInput).Entity;
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
