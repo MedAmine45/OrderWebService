@@ -113,7 +113,7 @@ namespace WebAPIPerspection.Controllers
         }
 
         // Create one new kit_order
-        // POST: api/Kitorder
+        // POST: api/Kit_order
         [HttpPost]
         public async Task<IActionResult> PostPrescription([FromBody] Prescription prescription)
         {
@@ -155,8 +155,8 @@ namespace WebAPIPerspection.Controllers
              
             await _context.SaveChangesAsync();
 
-             deletePatientIsNotExist(patient);
-             deletePrescriberIsNotExist(prescriber);
+             Patient patientdeleted = await deletePatientIsNotExist(patient);
+            Prescriber prescribedeleted = await deletePrescriberIsNotExist(prescriber);
 
             return Ok(prescription);
         }
@@ -190,9 +190,9 @@ namespace WebAPIPerspection.Controllers
             return _context.Prescriptions.Any(e => e.PrescriptionId == id);
         }
 
-        private async void deletePatientIsNotExist(Patient patient)
+        private async Task<Patient> deletePatientIsNotExist(Patient patient)
         {
-            List<long> patientIds = _context.Prescriptions.Select(p => p.Patient.PersonId).ToList<long>();
+            List<long> patientIds =  _context.Prescriptions.Select(p => p.Patient.PersonId).ToList<long>();
             List<long> prescriberIds = _context.Prescriptions.Select(p => p.Prescriber.PersonId).ToList<long>();
 
             bool isexist = patientIds.Contains(patient.PersonId) || prescriberIds.Contains(patient.PersonId);
@@ -210,9 +210,10 @@ namespace WebAPIPerspection.Controllers
 
                 }
             }
+            return patient;
         }
 
-        private async void deletePrescriberIsNotExist(Prescriber prescriber)
+        private async Task<Prescriber> deletePrescriberIsNotExist(Prescriber prescriber)
         {
             List<long> patientIds = _context.Prescriptions.Select(p => p.Patient.PersonId).ToList<long>();
             List<long> prescriberIds = _context.Prescriptions.Select(p => p.Prescriber.PersonId).ToList<long>();
@@ -232,6 +233,7 @@ namespace WebAPIPerspection.Controllers
 
                 }
             }
+            return prescriber;
         }
 
 
