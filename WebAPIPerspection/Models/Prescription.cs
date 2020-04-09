@@ -25,11 +25,11 @@ namespace WebAPIPerspection.Models
         //public long PrescriberPersonId { get; set; }
         public Patient Patient { get; set; }
         public Prescriber Prescriber { get; set; }
-        [NotMapped]
-        public List<string> Analyses { get; set; }
+        //[NotMapped]
+        //public List<string> Analyses { get; set; }
         public string Analyse { get; set; }
-        [NotMapped]
-        public List<string> Tubes { get; set; }
+        //[NotMapped]
+        //public List<string> Tubes { get; set; }
         public string Tube { get; set; }
     }
 }

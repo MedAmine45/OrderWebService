@@ -12,3 +12,7 @@ C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug
 C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.RazorTargetAssemblyInfo.cache
 C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.dll
 C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.pdb
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\bin\Debug\netcoreapp2.1\appsettings.Development.json
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\bin\Debug\netcoreapp2.1\appsettings.json
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\bin\Debug\netcoreapp2.1\Properties\launchSettings.json
+C:\Users\Admin\Desktop\Perspection\WebAPIPerspection\WebAPIPerspection\obj\Debug\netcoreapp2.1\WebAPIPerspection.genruntimeconfig.cache

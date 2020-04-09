@@ -51,7 +51,7 @@ namespace WebAPIPerspection.Controllers
 
         //Query Kit_order with params
         //kit_order?prescription_id=1234
-        [HttpGet("Kit_Order")]
+        [HttpGet("OrderId")]
         public IActionResult GetPrescriptionById(long prescription_id)
         {
             var Prescription = _context.Prescriptions.Include(p => p.Patient).Include(p => p.Prescriber).Where(x => x.PrescriptionId == prescription_id);
@@ -88,8 +88,8 @@ namespace WebAPIPerspection.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(prescription.Patient).State = EntityState.Detached;
-            _context.Entry(prescription.Prescriber).State = EntityState.Detached;
+            Patient patient = await SavePatient(prescription);
+            Prescriber prescribe = await SavePrescriber(prescription);
 
             _context.Entry(prescription).State = EntityState.Modified;
 
@@ -109,7 +109,7 @@ namespace WebAPIPerspection.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(prescription);
         }
 
         // Create one new kit_order
@@ -147,19 +147,24 @@ namespace WebAPIPerspection.Controllers
             var prescription = _context.Prescriptions.Include(p => p.Patient).Include(p => p.Prescriber).SingleOrDefault(x => x.PrescriptionId == id);
             if (prescription == null)
             {
-                return NotFound();
+                return NotFound("No kit order found");
             }
-
+            Patient patient = prescription.Patient;
+            Prescriber prescriber = prescription.Prescriber;
             _context.Prescriptions.Remove(prescription);
+             
             await _context.SaveChangesAsync();
+
+             deletePatientIsNotExist(patient);
+             deletePrescriberIsNotExist(prescriber);
 
             return Ok(prescription);
         }
 
         //Change state of one kit order to ‘delivered’
         [HttpPost]
-        [Route("{id}/state/{newStatus}")]
-        public IActionResult ChangeState(long id,string newStatus)
+        [Route("{id}/state/{newState}")]
+        public IActionResult ChangeState(long id,string newState)
         {
             var prescription = _context.Prescriptions.Include(p => p.Patient).Include(p => p.Prescriber).Where(p=>p.PrescriptionId ==id).FirstOrDefault();
 
@@ -167,9 +172,9 @@ namespace WebAPIPerspection.Controllers
             {
                 return NotFound("No kit order found");
             }
-            if(Enum.IsDefined(typeof(StateEnum), newStatus))
+            if(Enum.IsDefined(typeof(StateEnum), newState))
             {
-                prescription.State = newStatus;
+                prescription.State = newState;
                 _context.Entry(prescription).State = EntityState.Modified;
                 _context.SaveChangesAsync();
             }
@@ -185,18 +190,60 @@ namespace WebAPIPerspection.Controllers
             return _context.Prescriptions.Any(e => e.PrescriptionId == id);
         }
 
+        private async void deletePatientIsNotExist(Patient patient)
+        {
+            List<long> patientIds = _context.Prescriptions.Select(p => p.Patient.PersonId).ToList<long>();
+            List<long> prescriberIds = _context.Prescriptions.Select(p => p.Prescriber.PersonId).ToList<long>();
+
+            bool isexist = patientIds.Contains(patient.PersonId) || prescriberIds.Contains(patient.PersonId);
+            if (!isexist)
+            {
+                try
+                {
+                    _context.Patients.Remove(patient);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    throw;
+
+                }
+            }
+        }
+
+        private async void deletePrescriberIsNotExist(Prescriber prescriber)
+        {
+            List<long> patientIds = _context.Prescriptions.Select(p => p.Patient.PersonId).ToList<long>();
+            List<long> prescriberIds = _context.Prescriptions.Select(p => p.Prescriber.PersonId).ToList<long>();
+
+            bool isexist = patientIds.Contains(prescriber.PersonId) || prescriberIds.Contains(prescriber.PersonId);
+            if (!isexist)
+            {
+                try
+                {
+                    _context.Prescribers.Remove(prescriber);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    throw;
+
+                }
+            }
+        }
+
 
         private async Task<Patient> SavePatient(Prescription prescription)
         {
-            Patient patientInput = prescription.Patient;
-            Patient existPatient =  _context.Patients.Where(p => (p.Firstname == patientInput.Firstname && p.Lastname == patientInput.Lastname && p.Birth_date == patientInput.Birth_date) || p.Email == patientInput.Email || p.Mobile_phone == patientInput.Mobile_phone).ToList().FirstOrDefault() ;
+            Patient existPatient =  _context.Patients.Where(p => (p.Firstname == prescription.Patient.Firstname && p.Lastname == prescription.Patient.Lastname && p.Birth_date == prescription.Patient.Birth_date) || p.Email == prescription.Patient.Email || p.Mobile_phone == prescription.Patient.Mobile_phone).ToList().FirstOrDefault() ;
     
             if (existPatient!=null)
             {
                 long temp = existPatient.PersonId;
-                existPatient = patientInput;
+                existPatient = prescription.Patient;
                 existPatient.PersonId = temp;
-                // patientInput.PersonId = existPatient.PersonId;
 
 
                 try
@@ -218,7 +265,7 @@ namespace WebAPIPerspection.Controllers
                 Patient newPatient = new Patient();
                 try
                 {
-                     newPatient= _context.Patients.Add(patientInput).Entity;
+                     newPatient= _context.Patients.Add(prescription.Patient).Entity;
                 await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
@@ -233,12 +280,11 @@ namespace WebAPIPerspection.Controllers
         }
         private async Task<Prescriber> SavePrescriber(Prescription prescription)
         {
-            Prescriber prescriberInput = prescription.Prescriber;
-            Prescriber existPrescriber = _context.Prescribers.Where(p => (p.Firstname == prescriberInput.Firstname && p.Lastname == prescriberInput.Lastname && p.Birth_date == prescriberInput.Birth_date) || p.Email == prescriberInput.Email || p.Mobile_phone == prescriberInput.Mobile_phone).ToList().FirstOrDefault();
+            Prescriber existPrescriber = _context.Prescribers.Where(p => (p.Firstname == prescription.Prescriber.Firstname && p.Lastname == prescription.Prescriber.Lastname && p.Birth_date == prescription.Prescriber.Birth_date) || p.Email == prescription.Prescriber.Email || p.Mobile_phone == prescription.Prescriber.Mobile_phone).ToList().FirstOrDefault();
             if (existPrescriber != null)
             {
                 long temp = existPrescriber.PersonId;
-                existPrescriber = prescriberInput;
+                existPrescriber = prescription.Prescriber;
                 existPrescriber.PersonId = temp;
 
                 try
@@ -260,7 +306,7 @@ namespace WebAPIPerspection.Controllers
                 Prescriber newPrescriber = new Prescriber();
                 try
                 {
-                    newPrescriber = _context.Prescribers.Add(prescriberInput).Entity;
+                    newPrescriber = _context.Prescribers.Add(prescription.Prescriber).Entity;
                 await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)

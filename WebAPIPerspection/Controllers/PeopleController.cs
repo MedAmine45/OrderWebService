@@ -26,6 +26,19 @@ namespace WebAPIPerspection.Controllers
         {
             return _context.Person;
         }
+        [Route("Patient")]
+        [HttpGet]
+        public IEnumerable<Patient> GetPatient()
+        {
+            return _context.Patients;
+        }
+
+        [Route("Prescriber")]
+        [HttpGet]
+        public IEnumerable<Prescriber> GetPrescriber()
+        {
+            return _context.Prescribers;
+        }
 
         // GET: api/People/5
         [HttpGet("{id}")]
@@ -116,16 +129,16 @@ namespace WebAPIPerspection.Controllers
             return NoContent();
         }
 
-        [Route("Prescriber")]
-        [HttpPut("{prescriberid}")]
-        public async Task<IActionResult> PutPrescriber([FromRoute] long prescriberid, [FromBody] Prescriber prescriber)
+       // [Route("Prescriber")]
+        [HttpPut("prescriber")]
+        public async Task<IActionResult> PutPrescriber([FromRoute] long id, [FromBody] Prescriber prescriber)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (prescriberid != prescriber.PersonId)
+            if (id != prescriber.PersonId)
             {
                 return BadRequest();
             }
@@ -138,7 +151,7 @@ namespace WebAPIPerspection.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PersonExists(prescriberid))
+                if (!PersonExists(id))
                 {
                     return NotFound();
                 }

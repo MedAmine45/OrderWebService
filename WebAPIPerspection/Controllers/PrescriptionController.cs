@@ -17,7 +17,7 @@ namespace WebAPIPerspection.Controllers
             new Prescription()
             {
                 PrescriptionId =1234,
-                State = StateEnum.prescribed.ToString(),
+                State = StateEnum.Prescribed.ToString(),
                 Patient = new Patient()
                 {
                     Firstname = "Jean",
@@ -51,14 +51,14 @@ namespace WebAPIPerspection.Controllers
                     Weight = 84
                 },
                 Price_analyses =587,
-                Price_shipping =609,
-                Analyses= new List<string>(){ "INTINC7", "BUIO" },
-                Tubes = new List<string>(){ "2 tubes violets + 3 tubes rouges + 1 tube gris + selles", "1ères urines du matin" }
+                Price_shipping =609
+               // Analyses= new List<string>(){ "INTINC7", "BUIO" },
+               // Tubes = new List<string>(){ "2 tubes violets + 3 tubes rouges + 1 tube gris + selles", "1ères urines du matin" }
             },
             new Prescription()
             {
                 PrescriptionId =1235,
-                State = StateEnum.ordered.ToString(),
+                State = StateEnum.Ordered.ToString(),
                 Patient = new Patient()
                 {                   PersonId = 1,
                                     Firstname ="Mohamed Amine ",
@@ -95,14 +95,14 @@ namespace WebAPIPerspection.Controllers
                                      Weight =70
                 },
                 Price_analyses =587,
-                Price_shipping =609,
-                Analyses= new List<string>(){ "INTINC7", "BUIO" },
-                Tubes = new List<string>(){ "2 tubes violets + 3 tubes rouges + 1 tube gris + selles", "1ères urines du matin" }
+                Price_shipping =609
+               // Analyses= new List<string>(){ "INTINC7", "BUIO" },
+               // Tubes = new List<string>(){ "2 tubes violets + 3 tubes rouges + 1 tube gris + selles", "1ères urines du matin" }
             },
              new Prescription()
             {
                 PrescriptionId =1236,
-                State = StateEnum.ordered.ToString(),
+                State = StateEnum.Ordered.ToString(),
                 Patient = new Patient()
                 {                   PersonId = 1,
                                     Firstname ="jihed ",
@@ -140,13 +140,15 @@ namespace WebAPIPerspection.Controllers
                 },
                 Price_analyses =587,
                 Price_shipping =609,
-                Analyses= new List<string>(){ "INTINC7", "BUIO" },
-                Tubes = new List<string>(){ "2 tubes violets + 3 tubes rouges + 1 tube gris + selles", "1ères urines du matin" }
+                Analyse = "INTINC7",
+                Tube = "2 Tubes violets  + 3 tubes rouges + 1 tube gris + selles"
+                //Analyses= new List<string>(){ "INTINC7", "BUIO" },
+                //Tubes = new List<string>(){ "2 tubes violets + 3 tubes rouges + 1 tube gris + selles", "1ères urines du matin" }
             },
               new Prescription()
             {
                 PrescriptionId =1237,
-                State = StateEnum.prescribed.ToString(),
+                State = StateEnum.Prescribed.ToString(),
                 Patient = new Patient()
                 {                   PersonId = 1,
                                     Firstname ="mohamed ",
@@ -184,8 +186,8 @@ namespace WebAPIPerspection.Controllers
                 },
                 Price_analyses =587,
                 Price_shipping =609,
-                Analyses= new List<string>(){ "INTINC7", "BUIO" },
-                Tubes = new List<string>(){ "2 tubes violets + 3 tubes rouges + 1 tube gris + selles", "1ères urines du matin" }
+                Analyse= "BUIO",
+                Tube = "1ères urines du matin" 
             }
         };
 
