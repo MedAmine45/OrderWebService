@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,12 @@ using WebAPIPerspection.Models;
 
 namespace WebAPIPerspection.Models
 {
-    public class PrescriptionDbContext :DbContext
+    public class PrescriptionDbContext : IdentityDbContext
     {
         public PrescriptionDbContext(DbContextOptions<PrescriptionDbContext> options) : base(options)
         {
         }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
        
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<Patient> Patients { get; set; }
@@ -19,6 +21,7 @@ namespace WebAPIPerspection.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Person>()
                 .HasDiscriminator<string>("PersonType");
         }

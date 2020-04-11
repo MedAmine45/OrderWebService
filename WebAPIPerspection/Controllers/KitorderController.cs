@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace WebAPIPerspection.Controllers
 {
     [Route("api/Kit_order")]
     [ApiController]
+    [Authorize]
     public class KitorderController : ControllerBase
     {
         private readonly PrescriptionDbContext _context;
