@@ -196,7 +196,7 @@ namespace WebAPIPerspection.Controllers
             {
                 return BadRequest();
             }
-            if (! (_context.Person.Any(p=>p.Firstname== patientPerson.Firstname || p.Lastname== patientPerson.Lastname || p.Email == patientPerson.Email || p.Birth_date==patientPerson.Birth_date)))
+            if (! (_context.Patients.Any(p=>p.Firstname== patientPerson.Firstname || p.Lastname== patientPerson.Lastname || p.Email == patientPerson.Email || p.Birth_date==patientPerson.Birth_date)))
             {
                 _context.Patients.Add(patientPerson);
                 await _context.SaveChangesAsync();
@@ -222,7 +222,7 @@ namespace WebAPIPerspection.Controllers
             {
                 return BadRequest();
             }
-            if (!(_context.Person.Any(p => p.Firstname == prescriberPerson.Firstname || p.Lastname == prescriberPerson.Lastname || p.Email == prescriberPerson.Email || p.Birth_date == prescriberPerson.Birth_date)))
+            if (!(_context.Person.Any(p => p.Firstname == prescriberPerson.Firstname || p.Lastname == prescriberPerson.Lastname || p.Email == prescriberPerson.Email )))
             {
                 _context.Prescribers.Add(prescriberPerson);
                 await _context.SaveChangesAsync();

@@ -19,11 +19,7 @@ namespace WebAPIPerspection.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-        [Required]
-        public string Birth_date { get; set; }
-        [Column("Sex")]
-        [Required]
-        public string Sex { get; set; }
+      
         [Required]
         public string Address1 { get; set; }
 
@@ -34,10 +30,8 @@ namespace WebAPIPerspection.Models
         public string City { get; set; }
         [Required]
         public string Country { get; set; }
-
-        public int Height { get; set; }
-
-        public int Weight { get; set; }
+        [Required]
+        public string Language { get; set; }
 
         public string Mobile_phone { get; set; }
     }

@@ -52,7 +52,7 @@ namespace WebAPIPerspection.Controllers
             }
 
         }
-        //Post:/api/ApplicationUser/Register
+        //Post:/api/ApplicationUser/Login
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login(LoginModel model)

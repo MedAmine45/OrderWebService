@@ -19,6 +19,9 @@ namespace WebAPIPerspection.Models
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Prescriber> Prescribers { get; set; }
 
+        public DbSet<Analyse> Analyses { get; set; }
+        public DbSet<Log> Logs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -18,6 +18,7 @@ namespace WebAPIPerspection.Models
         Samplessent = 6,
         Samplesreceived = 7,
         Cancelled = 8,
-        Onhold = 9
+        Onhold = 9,
+        Closed=10
     }
 }

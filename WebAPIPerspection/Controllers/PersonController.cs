@@ -17,32 +17,24 @@ namespace WebAPIPerspection.Controllers
             new Person(){ PersonId = 1,
                                     Firstname ="Mohamed Amine ",
                                     Lastname ="Ben Noureddine",
-                                    Email = "mohamed.bennourddine@gmail.com" ,
-                                     Sex =Gender.M.ToString(),
-                                     Birth_date ="16/01/1995",
+                                    Email = "mohamed.bennourddine@gmail.com", 
                                      Address1 ="rue okba ben nafaa",
                                      Address2 ="mornag 2090",
                                      Zip="2090",
                                      City="Ben Arous",
                                      Country="TN",
-                                     Mobile_phone ="24251609",
-                                     Height= 184,
-                                     Weight =65
+                                     Mobile_phone ="24251609"
                                         },
             new Person(){ PersonId = 2,
                                     Firstname ="Zinédine ",
                                     Lastname ="Zidane",
                                     Email = "Zinédine.Zidane@gmail.com" ,
-                                     Sex ="M",
-                                     Birth_date ="23/06/1972",
                                      Address1 ="Émile et Armand Massard (Avenue)",
                                      Address2 ="75017 Paris",
                                      Zip="75017",
                                      City="Paris",
                                      Country="FR",
-                                     Mobile_phone ="87864521213",
-                                     Height= 185,
-                                     Weight =70
+                                     Mobile_phone ="87864521213"
                                         },
         };
         [HttpGet]

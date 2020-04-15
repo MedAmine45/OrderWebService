@@ -11,9 +11,9 @@ namespace WebAPIPerspection.Models
     public enum BillingState
     {
         topay = 1,
-        paidonline = 2,
-        paidbycheck = 3,
-        paidbytransfer = 4,
-        receivednotpaid = 5
+        paid = 2,
+        checkexpected = 3,
+        transferexpected = 4,
+        wrongpayment = 5
     }
 }

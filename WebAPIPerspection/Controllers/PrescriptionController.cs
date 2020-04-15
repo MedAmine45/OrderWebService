@@ -18,6 +18,10 @@ namespace WebAPIPerspection.Controllers
             {
                 PrescriptionId =1234,
                 State = StateEnum.Prescribed.ToString(),
+                Billing_state = BillingState.topay.ToString(),
+                Invoice_state = InvoiceStateEnum.noinvoice.ToString(),
+                Invoice_id ="2020-0000124",
+
                 Patient = new Patient()
                 {
                     Firstname = "Jean",
@@ -30,30 +34,79 @@ namespace WebAPIPerspection.Controllers
                     Zip = "75001",
                     City="Paris",
                     Country ="fr",
+                    Language = "fr",
                     Mobile_phone="06 78 90 12 34",
-                    Home_phone ="01 78 90 12 34"
+                    Home_phone ="01 78 90 12 34",
+                    Height = 184,
+                    Weight = 84
+
                 },
                 Prescriber = new Prescriber
                 {
                      Firstname="Andrée",
                      Lastname="Durand",
-                     Birth_date="31/12/1980",
-                     Sex = Gender.F.ToString(),
                      Email="a.durand1980@gmail.com",
                      Address1="314 avenue pi",
                      Address2="Porte 15",
                      Zip="75006",
                     City="Paris",
                     Country="fr",
+                    Language="fr",
                     Mobile_phone="06 78 90 12 34",
                     Office_phone="01 78 90 12 34",
-                    Height = 184,
-                    Weight = 84
                 },
                 Price_analyses =587,
-                Price_shipping =609
-               // Analyses= new List<string>(){ "INTINC7", "BUIO" },
-               // Tubes = new List<string>(){ "2 tubes violets + 3 tubes rouges + 1 tube gris + selles", "1ères urines du matin" }
+                Price_shipping =609,
+                Amount_paid = 609,
+                Analyses = new List<Analyse>()
+                {
+                    new Analyse(){
+                        Code="INTINC7",
+                        Tubes="2 tubes violets + 3 tubes rouges + 1 tube gris + selles",
+                        Price= 565,
+                        Tube_violet= 2,
+                        Tube_rouge =3,
+                        Tube_gris =1,
+                        Selles =1},
+                      new Analyse(){
+                        Code="BUIO",
+                        Tubes="1ères urines du matin",
+                        Price= 135,
+                        Urine_matin = 1
+                        }
+                },
+                Dossier_glims = "12345",
+                Kit_shipping_no ="TR546545064654",
+                Sample_shipping_no = "RE5646506540",
+                Logs = new List<Log>()
+                {
+                    new Log()    {
+                State="prescribed",
+                Billing_state ="to pay",
+                Invoice_state="",
+                By ="Dr ho",
+              On= DateTime.Parse("2020-04-01 09:25:23")
+                     },
+                    new Log()
+             {
+        State="ordered",
+        Billing_state="paid",
+        Invoice_state="requested",
+        By="Mickey Mouse",
+        On = DateTime.Parse("2020-04-01 12:25:23")
+    },
+                    new Log()
+    {
+        State="kit sent",
+        Billing_state="",
+        Invoice_state="",
+        By="Donald Duck",
+        On= DateTime.Parse("2020-04-01 18:25:23")
+        }
+
+                }
+
+
             },
             new Prescription()
             {
@@ -82,17 +135,15 @@ namespace WebAPIPerspection.Controllers
                                     Firstname ="Zinédine ",
                                     Lastname ="Zidane",
                                     Email = "Zinédine.Zidane@gmail.com" ,
-                                     Sex ="M",
-                                     Birth_date ="23/06/1972",
                                      Address1 ="rue okba ben nafaa",
                                      Address2 ="mornag 2090",
                                      Zip="75001",
                                      City="Marseille",
                                      Country="FR",
+                                     Language="FR",
                                      Mobile_phone ="87864521213",
                                      Office_phone = "54621231321",
-                                     Height= 185,
-                                     Weight =70
+                                    
                 },
                 Price_analyses =587,
                 Price_shipping =609
@@ -125,23 +176,17 @@ namespace WebAPIPerspection.Controllers
                      PersonId = 2,
                                     Firstname ="Aymen ",
                                     Lastname ="Zarouk",
-                                    Email = "Aymen.Zarouk@gmail.com" ,
-                                     Sex ="M",
-                                     Birth_date ="23/06/1972",
+                                    Email = "Aymen.Zarouk@gmail.com",
                                      Address1 ="rue okba ben nafaa",
                                      Address2 ="mornag 2090",
                                      Zip="75001",
                                      City="Marseille",
                                      Country="FR",
                                      Mobile_phone ="87864521213",
-                                     Office_phone = "54621231321",
-                                     Height= 185,
-                                     Weight =70
+                                     Office_phone = "54621231321"
                 },
                 Price_analyses =587,
-                Price_shipping =609,
-                Analyse = "INTINC7",
-                Tube = "2 Tubes violets  + 3 tubes rouges + 1 tube gris + selles"
+                Price_shipping =609
                 //Analyses= new List<string>(){ "INTINC7", "BUIO" },
                 //Tubes = new List<string>(){ "2 tubes violets + 3 tubes rouges + 1 tube gris + selles", "1ères urines du matin" }
             },
@@ -172,22 +217,16 @@ namespace WebAPIPerspection.Controllers
                                     Firstname ="Amira ",
                                     Lastname ="ben moussa",
                                     Email = "Amira.benmoussa@gmail.com" ,
-                                     Sex ="M",
-                                     Birth_date ="23/06/1972",
                                      Address1 ="menzha",
                                      Address2 ="mornag 2090",
                                      Zip="75001",
                                      City="Tunis",
                                      Country="FR",
                                      Mobile_phone ="87864521213",
-                                     Office_phone = "54621231321",
-                                     Height= 185,
-                                     Weight =70
+                                     Office_phone = "54621231321"
                 },
                 Price_analyses =587,
-                Price_shipping =609,
-                Analyse= "BUIO",
-                Tube = "1ères urines du matin" 
+                Price_shipping =609
             }
         };
 

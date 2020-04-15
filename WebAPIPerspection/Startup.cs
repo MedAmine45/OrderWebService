@@ -15,7 +15,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using WebAPIPerspection.Controllers;
 using WebAPIPerspection.Models;
 
 namespace WebAPIPerspection
@@ -34,13 +36,20 @@ namespace WebAPIPerspection
         {
             //Inject AppSettings
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+           // services.Configure<EmailState>(Configuration.GetSection("EmailSettings"));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                                                    .AddJsonOptions(options => {
-                                                    var resolver = options.SerializerSettings.ContractResolver;
-                                                    if (resolver != null)
-                                                    (resolver as DefaultContractResolver).NamingStrategy = null;
-                                       });
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            //                                        .AddJsonOptions(options => {
+            //                                        var resolver = options.SerializerSettings.ContractResolver;
+            //                                        if (resolver != null)
+            //                                        (resolver as DefaultContractResolver).NamingStrategy = null;
+            //                           });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().AddJsonOptions(opt =>
+                {
+                opt.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+                });
             services.AddDbContext<PrescriptionDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("connection")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
             services.AddDbContext<PrescriptionDbContext>(ServiceLifetime.Transient);
             services.AddDefaultIdentity<ApplicationUser>()

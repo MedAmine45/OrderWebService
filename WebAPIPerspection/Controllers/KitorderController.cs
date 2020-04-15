@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using WebAPIPerspection.Models;
 
 namespace WebAPIPerspection.Controllers
@@ -17,17 +18,24 @@ namespace WebAPIPerspection.Controllers
     public class KitorderController : ControllerBase
     {
         private readonly PrescriptionDbContext _context;
+        private readonly EmailSettings _emailSettings;
 
-        public KitorderController(PrescriptionDbContext context)
+        public KitorderController(PrescriptionDbContext context, IOptions<EmailSettings> emailSettings)
         {
             _context = context;
+            _emailSettings = emailSettings.Value;
         }
+
         // Query all kit_orders
         // GET: api/Kit_order
         [HttpGet]
         public IEnumerable<Prescription> GetPrescriptions()
         {
-            return _context.Prescriptions.Include(p=>p.Patient).Include(p=>p.Prescriber);
+            return _context.Prescriptions
+                .Include(p=>p.Analyses)
+                .Include(p=>p.Logs)
+                .Include(p=>p.Patient)
+                .Include(p=>p.Prescriber);
         }
 
         //  Get one kit_order by its id
@@ -40,7 +48,14 @@ namespace WebAPIPerspection.Controllers
                 return BadRequest(ModelState);
             }
 
-            var prescription = await _context.Prescriptions.Include(p=>p.Patient).Include(p=>p.Prescriber).SingleOrDefaultAsync(p=>p.PrescriptionId==id);
+            var prescription = await _context.Prescriptions
+                .Include(p=>p.Patient)
+                .Include(p=>p.Prescriber)
+                .Include(p => p.Analyses)
+                .Include(p => p.Logs)
+                .SingleOrDefaultAsync(p=>p.PrescriptionId==id);
+
+          
 
             if (prescription == null)
             {
@@ -56,7 +71,12 @@ namespace WebAPIPerspection.Controllers
         [HttpGet("OrderId")]
         public IActionResult GetPrescriptionById(long prescription_id)
         {
-            var Prescription = _context.Prescriptions.Include(p => p.Patient).Include(p => p.Prescriber).Where(x => x.PrescriptionId == prescription_id);
+            var Prescription = _context.Prescriptions
+                .Include(p => p.Patient)
+                .Include(p => p.Prescriber)
+                .Include(p=>p.Analyses)
+                .Include(p=>p.Logs)
+                .Where(x => x.PrescriptionId == prescription_id);
             if (Prescription.Count() == 0 )
             {
                 return NotFound("No kit order found");
@@ -67,7 +87,12 @@ namespace WebAPIPerspection.Controllers
         [HttpGet("OrderState")]
         public IActionResult GetPrescriptionByState(string state)
         {
-            var Prescription = _context.Prescriptions.Include(p => p.Patient).Include(p => p.Prescriber).Where(x => x.State == state);
+            var Prescription = _context.Prescriptions
+                .Include(p => p.Patient)
+                .Include(p => p.Prescriber)
+                .Include(p=>p.Analyses)
+                .Include(p=>p.Logs)
+                .Where(x => x.State == state);
             if (Prescription.Count() == 0)
             {
                 return NotFound("No kit order found");
@@ -93,7 +118,19 @@ namespace WebAPIPerspection.Controllers
             Patient patient = await SavePatient(prescription);
             Prescriber prescribe = await SavePrescriber(prescription);
 
+            IEnumerable<Analyse> analyses = await SaveAnalyses(prescription);
+            IEnumerable<Log> logs = await SaveLogs(prescription);
+
+
             _context.Entry(prescription).State = EntityState.Modified;
+            foreach(var analyse in prescription.Analyses)
+            {
+                _context.Entry(analyse).State = EntityState.Modified;
+            }
+            foreach (var log in prescription.Logs)
+            {
+                _context.Entry(log).State = EntityState.Modified;
+            }
 
             try
             {
@@ -129,10 +166,8 @@ namespace WebAPIPerspection.Controllers
             Prescriber prescribe = await SavePrescriber(prescription);
 
             _context.Prescriptions.Add(prescription);
-            //_context.SaveChanges();
             await _context.SaveChangesAsync();
-             return CreatedAtAction("GetPrescription", new { id = prescription.PrescriptionId }, prescription);
-          
+            return CreatedAtAction("GetPrescription", new { id = prescription.PrescriptionId }, prescription);
          
         }
 
@@ -146,13 +181,28 @@ namespace WebAPIPerspection.Controllers
                 return BadRequest(ModelState);
             }
 
-            var prescription = _context.Prescriptions.Include(p => p.Patient).Include(p => p.Prescriber).SingleOrDefault(x => x.PrescriptionId == id);
+            var prescription = _context.Prescriptions
+                .Include(p => p.Patient)
+                .Include(p => p.Prescriber)
+                .Include(p=>p.Analyses)
+                .Include(p=>p.Logs)
+                .SingleOrDefault(x => x.PrescriptionId == id);
             if (prescription == null)
             {
                 return NotFound("No kit order found");
             }
             Patient patient = prescription.Patient;
             Prescriber prescriber = prescription.Prescriber;
+            foreach(Analyse analyse in prescription.Analyses)
+            {
+                _context.Analyses.Remove(analyse);
+            }
+            foreach (Log log in prescription.Logs)
+            {
+                _context.Logs.Remove(log);
+            }
+
+
             _context.Prescriptions.Remove(prescription);
              
             await _context.SaveChangesAsync();
@@ -168,7 +218,12 @@ namespace WebAPIPerspection.Controllers
         [Route("{id}/state/{newState}")]
         public IActionResult ChangeState(long id,string newState)
         {
-            var prescription = _context.Prescriptions.Include(p => p.Patient).Include(p => p.Prescriber).Where(p=>p.PrescriptionId ==id).FirstOrDefault();
+            var prescription = _context.Prescriptions
+                                .Include(p => p.Patient)
+                                .Include(p => p.Prescriber)
+                                .Include(p=>p.Analyses)
+                                .Include(p=>p.Logs)
+                                .Where(p=>p.PrescriptionId ==id).FirstOrDefault();
 
             if (prescription == null)
             {
@@ -177,6 +232,8 @@ namespace WebAPIPerspection.Controllers
             if(Enum.IsDefined(typeof(StateEnum), newState))
             {
                 prescription.State = newState;
+                EmailState _emailOrderState = new EmailState(_emailSettings);
+                _emailOrderState.EnvoieEmail(prescription, newState);
                 _context.Entry(prescription).State = EntityState.Modified;
                 _context.SaveChangesAsync();
             }
@@ -284,7 +341,7 @@ namespace WebAPIPerspection.Controllers
         }
         private async Task<Prescriber> SavePrescriber(Prescription prescription)
         {
-            Prescriber existPrescriber = _context.Prescribers.Where(p => (p.Firstname == prescription.Prescriber.Firstname && p.Lastname == prescription.Prescriber.Lastname && p.Birth_date == prescription.Prescriber.Birth_date) || p.Email == prescription.Prescriber.Email || p.Mobile_phone == prescription.Prescriber.Mobile_phone).ToList().FirstOrDefault();
+            Prescriber existPrescriber = _context.Prescribers.Where(p => (p.Firstname == prescription.Prescriber.Firstname && p.Lastname == prescription.Prescriber.Lastname) || p.Email == prescription.Prescriber.Email || p.Mobile_phone == prescription.Prescriber.Mobile_phone).ToList().FirstOrDefault();
             if (existPrescriber != null)
             {
                 long temp = existPrescriber.PersonId;
@@ -323,5 +380,126 @@ namespace WebAPIPerspection.Controllers
             }
             
         }
+
+
+        private async Task<IEnumerable<Analyse>> SaveAnalyses(Prescription prescription)
+        {
+            var AnalysesInput = prescription.Analyses.ToList();
+            foreach( var analyse in AnalysesInput)
+            {
+                Analyse existAnalyse = _context.Analyses.Where(a => a.Code == analyse.Code && a.Prescription.PrescriptionId == prescription.PrescriptionId).FirstOrDefault();
+                if (existAnalyse != null)
+                {
+                    long temp = existAnalyse.AnalyseID;
+                    existAnalyse = analyse;
+                    existAnalyse.AnalyseID = temp;
+                    try
+                    {
+                        _context.Entry(existAnalyse).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex);
+                        throw;
+
+                    }
+                }
+                else
+                {
+                    Analyse newAnalyse = new Analyse();
+                    try
+                    {
+                        newAnalyse =_context.Analyses.Add(analyse).Entity;
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex);
+                        throw;
+
+                    }
+
+                }
+               
+            }
+            //Delete analyses 
+            var analysesAll = _context.Analyses.Where(a => a.Prescription.PrescriptionId == prescription.PrescriptionId).Select(a=>a.AnalyseID).ToList();
+            var analysesDeleteIds = analysesAll.Except(AnalysesInput.Select(a=>a.AnalyseID));
+            var analysesDelete = from a in _context.Analyses.ToList()
+                                 where analysesDeleteIds.Contains(a.AnalyseID)
+                                 select a;
+                              
+            foreach (var analyse in analysesDelete)
+            {
+                _context.Analyses.Remove(analyse);
+                await _context.SaveChangesAsync();
+
+            }
+
+            return AnalysesInput;
+        }
+        private async Task<IEnumerable<Log>> SaveLogs(Prescription prescription)
+        {
+            var LogsInput = prescription.Logs;
+            foreach (var log in LogsInput)
+            {
+                Log existLog = _context.Logs.Where(l=> l.State == log.State && l.Billing_state == log.Billing_state &&l.Invoice_state == log.Invoice_state && l.Prescription.PrescriptionId== prescription.PrescriptionId).FirstOrDefault();
+                if (existLog != null)
+                {
+                    long temp = existLog.LogID;
+                    existLog = log;
+                    existLog.LogID = temp;
+                    try
+                    {
+                        _context.Entry(log).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex);
+                        throw;
+
+                    }
+                }
+                else
+                {
+
+                     Log newLog = new Log();
+                    try
+                    {
+                        newLog =_context.Logs.Add(log).Entity;
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex);
+                        throw;
+
+                    }
+
+                }
+
+
+            }
+
+            //Delete Logs 
+            var LogsAll = _context.Logs.Where(a => a.Prescription.PrescriptionId == prescription.PrescriptionId).Select(l => l.LogID).ToList();
+            var LogsDeleteIds = LogsAll.Except(LogsInput.Select(l => l.LogID));
+            var LogsDelete = from l in _context.Logs.ToList()
+                                 where LogsDeleteIds.Contains(l.LogID)
+                                 select l;
+
+            foreach (var Log in LogsDelete)
+            {
+                _context.Logs.Remove(Log);
+                await _context.SaveChangesAsync();
+
+            }
+            return LogsInput;
+        }
+
+
+
     }
 }
