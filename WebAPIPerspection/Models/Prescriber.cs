@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace WebAPIPerspection.Models
 {
+    [DataContract]
     public class Prescriber : Person
     {
+        [DataMember]
         public string Office_phone { get; set; }
     }
 }

@@ -47,14 +47,14 @@ namespace WebAPIPerspection.Controllers
                       .AppendLine("")
                       .AppendLine("---------------------------------------------------------------------------------------------------------")
                       .AppendLine("the kit will be sent");
-                } else if(newState == StateEnum.Sent.ToString())
+                } else if(newState == "Kit Sent")
                 {
                     body.AppendLine(" ")
                       .AppendFormat("dear patient {0} {1}, Thanks for your order. ", prescription.Patient.Firstname, prescription.Patient.Lastname)
                       .AppendLine("")
                       .AppendLine("---------------------------------------------------------------------------------------------------------")
                       .AppendLine("Your  order has been sent");
-                }else if(newState == StateEnum.Samplesreceived.ToString())
+                }else if(newState == "Samples received")
                 {
                     body.AppendLine(" ")
                      .AppendFormat("dear patient {0} {1}, Thanks for your order.  ", prescription.Patient.Firstname, prescription.Patient.Lastname)

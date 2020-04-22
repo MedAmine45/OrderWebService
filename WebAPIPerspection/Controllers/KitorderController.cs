@@ -31,6 +31,7 @@ namespace WebAPIPerspection.Controllers
         [HttpGet]
         public IEnumerable<Prescription> GetPrescriptions()
         {
+            
             return _context.Prescriptions
                 .Include(p=>p.Analyses)
                 .Include(p=>p.Logs)
@@ -77,10 +78,10 @@ namespace WebAPIPerspection.Controllers
                 .Include(p=>p.Analyses)
                 .Include(p=>p.Logs)
                 .Where(x => x.PrescriptionId == prescription_id);
-            if (Prescription.Count() == 0 )
-            {
-                return NotFound("No kit order found");
-            }
+            //if (Prescription.Count() == 0 )
+            //{
+            //    return NotFound("No kit order found");
+            //}
             return Ok(Prescription);
         }
         //kit_order?state=ordered
@@ -93,10 +94,10 @@ namespace WebAPIPerspection.Controllers
                 .Include(p=>p.Analyses)
                 .Include(p=>p.Logs)
                 .Where(x => x.State == state);
-            if (Prescription.Count() == 0)
-            {
-                return NotFound("No kit order found");
-            }
+            //if (Prescription.Count() == 0)
+            //{
+            //    return NotFound("No kit order found");
+            //}
             return Ok(Prescription);
         }
 
@@ -216,7 +217,7 @@ namespace WebAPIPerspection.Controllers
         //Change state of one kit order to ‘delivered’
         [HttpPost]
         [Route("{id}/state/{newState}")]
-        public IActionResult ChangeState(long id,string newState)
+        public async Task<IActionResult> ChangeState(long id,string newState)
         {
             var prescription = _context.Prescriptions
                                 .Include(p => p.Patient)
@@ -229,13 +230,13 @@ namespace WebAPIPerspection.Controllers
             {
                 return NotFound("No kit order found");
             }
-            if(Enum.IsDefined(typeof(StateEnum), newState))
+            if(Enum.IsDefined(typeof(StateEnum), newState) || newState == "Samples Received"|| newState == "Kit Sent" || newState == "Kit Delivered" || newState == "Samples Sent" || newState == "On hold")
             {
                 prescription.State = newState;
                 EmailState _emailOrderState = new EmailState(_emailSettings);
                 _emailOrderState.EnvoieEmail(prescription, newState);
                 _context.Entry(prescription).State = EntityState.Modified;
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             else
             {
@@ -298,7 +299,7 @@ namespace WebAPIPerspection.Controllers
 
         private async Task<Patient> SavePatient(Prescription prescription)
         {
-            Patient existPatient =  _context.Patients.Where(p => (p.Firstname == prescription.Patient.Firstname && p.Lastname == prescription.Patient.Lastname && p.Birth_date == prescription.Patient.Birth_date) || p.Email == prescription.Patient.Email || p.Mobile_phone == prescription.Patient.Mobile_phone).ToList().FirstOrDefault() ;
+            Patient existPatient =  _context.Patients.Where(p => (p.Firstname == prescription.Patient.Firstname && p.Lastname == prescription.Patient.Lastname && p.Birth_date == prescription.Patient.Birth_date && p.Email == prescription.Patient.Email) || p.Mobile_phone == prescription.Patient.Mobile_phone).ToList().FirstOrDefault() ;
     
             if (existPatient!=null)
             {
@@ -341,7 +342,7 @@ namespace WebAPIPerspection.Controllers
         }
         private async Task<Prescriber> SavePrescriber(Prescription prescription)
         {
-            Prescriber existPrescriber = _context.Prescribers.Where(p => (p.Firstname == prescription.Prescriber.Firstname && p.Lastname == prescription.Prescriber.Lastname) || p.Email == prescription.Prescriber.Email || p.Mobile_phone == prescription.Prescriber.Mobile_phone).ToList().FirstOrDefault();
+            Prescriber existPrescriber = _context.Prescribers.Where(p => (p.Firstname == prescription.Prescriber.Firstname && p.Lastname == prescription.Prescriber.Lastname && p.Email == prescription.Prescriber.Email) || p.Mobile_phone == prescription.Prescriber.Mobile_phone).ToList().FirstOrDefault();
             if (existPrescriber != null)
             {
                 long temp = existPrescriber.PersonId;
