@@ -116,6 +116,19 @@ namespace WebAPIPerspection.Controllers
                 return BadRequest();
             }
 
+            var prescriptionOld = _context.Prescriptions
+                .Include(p => p.Patient)
+                .Include(p => p.Prescriber)
+                .Include(p => p.Analyses)
+                .Include(p => p.Logs)
+                .SingleOrDefault(x => x.PrescriptionId == id);
+            string stateOld = prescriptionOld.State;
+            if( stateOld != prescription.State)
+            {
+                EmailState _emailOrderState = new EmailState(_emailSettings);
+                _emailOrderState.EnvoieEmail(prescription, prescription.State);
+            }
+
             Patient patient = await SavePatient(prescription);
             Prescriber prescribe = await SavePrescriber(prescription);
 
